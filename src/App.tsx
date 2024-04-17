@@ -1,10 +1,10 @@
 import './App.css'
-import Home from './components/Home'
+import HouseholdSalaryCalculator from './components/HouseholdSalaryCalculator'
 
 function App() {
 
   return (
-    <Home />
+    <HouseholdSalaryCalculator />
   )
 }
 
