@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import FamilyMemberTabs from "./FamilyMemberTabs/FamilyMemberTabs";
 import HouseholdSummary from "./HouseholdSummary/HouseholdSummary";
 import SalaryCalculator from "./SalaryCalculator/SalaryCalculator";
@@ -14,8 +14,12 @@ export interface familyMember {
     familyDiscount: boolean;
     dependents: number;
 }
+export interface MyContextType {
+    currentFamilyMember: familyMember,
+    setCurrentFamilyMember: (newValue: familyMember) => void,
+}
 
-export const CurrentMemberContext = createContext<familyMember|null>(null);
+export const CurrentMemberContext = createContext<MyContextType|undefined>(undefined);
 
 const HouseholdSalaryCalculator = () => {
     const defaultFamilyMember: familyMember = {
@@ -29,31 +33,39 @@ const HouseholdSalaryCalculator = () => {
         familyDiscount: false,
         dependents: 0,
     };
-    const [currentFamilyMember, setCurrentFamilyMember] = useState({
+    const [currentFamilyMember, setCurrentFamilyMember] = useState<familyMember>({
         ...defaultFamilyMember,
     });
     const [familyMembers, setFamilyMembers] = useState<familyMember[]>([
         defaultFamilyMember,
     ]);
-    
+    useEffect(() => {
+        const index = familyMembers.findIndex(member => member.id === currentFamilyMember.id);
+        const updatedFamilyMembers = [...familyMembers];
+        updatedFamilyMembers[index] = currentFamilyMember;
+        setFamilyMembers(updatedFamilyMembers);
+    }, [currentFamilyMember]);
+  const updateValue = (newValue: familyMember) => {
+    setCurrentFamilyMember(newValue);
+  };
+
+
+  const contextValue: MyContextType = {
+    currentFamilyMember:currentFamilyMember,
+    setCurrentFamilyMember: updateValue,
+  };
     const newMember = () => {
-        console.log("newmember");
         setFamilyMembers([
             ...familyMembers,
             { ...defaultFamilyMember, id: familyMembers.length },
         ]);
     };
-    const setActiveMember = (id:number)=>{
-      const newCurrent = familyMembers.find(m=>m.id===id);
-      newCurrent && setCurrentFamilyMember(newCurrent);
-    }
     return (
-        <CurrentMemberContext.Provider value={currentFamilyMember} >
+        <CurrentMemberContext.Provider value={contextValue} >
             <header>
                 <FamilyMemberTabs
                     family={familyMembers}
                     addFamilyMember={newMember}
-                    setCurrentMember={setActiveMember}
                 />
             </header>
             <main className="flex gap-1 mt-2">

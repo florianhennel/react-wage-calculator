@@ -1,19 +1,20 @@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { CurrentMemberContext, familyMember } from "@/components/HouseholdSalaryCalculator";
 
 interface Props {
     id: string;
     text: string;
-    checked:boolean,
-    click:()=>void,
 }
 
-export default function DiscountSwitch({ id, text, checked,click }: Props) {
-    const [isChecked, setIsChecked] = useState<boolean>(checked);
+export default function DiscountSwitch({ id, text }: Props) {
+
+    const {currentFamilyMember,setCurrentFamilyMember} = useContext(CurrentMemberContext)!;
+    const [isChecked, setIsChecked] = useState<boolean>(currentFamilyMember[id as keyof familyMember] as boolean);
     const activate = ()=>{
-        click();
+        setCurrentFamilyMember({...currentFamilyMember,[id]:!isChecked});
         setIsChecked(!isChecked);
     }
     return (
@@ -21,7 +22,7 @@ export default function DiscountSwitch({ id, text, checked,click }: Props) {
             <Switch
                 id={id}
                 onClick={activate}
-                checked={isChecked}
+                checked={currentFamilyMember[id as keyof familyMember] as boolean}
             ></Switch>
             <Label htmlFor={id}>{text}</Label>
             {isChecked && id === "newlyWed" && (

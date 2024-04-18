@@ -1,4 +1,3 @@
-import { familyMember } from "../HouseholdSalaryCalculator";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
@@ -7,10 +6,10 @@ import { CurrentMemberContext } from "../HouseholdSalaryCalculator";
 import { useContext } from "react";
 
 export default function SalaryCalculator() {
-    const currentFamilyMember = useContext(CurrentMemberContext);
-    const activate = (id: string) => {
-        console.log(id);
-    };
+    const {currentFamilyMember,setCurrentFamilyMember} = useContext(CurrentMemberContext)!;
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCurrentFamilyMember({...currentFamilyMember,[event.target.id]: event.target.value});
+      };
     if (currentFamilyMember) {
         return (
             <div className=" flex flex-col w-1/2 items-start rounded-lg bg-zinc-700 p-4 gap-2 text-white">
@@ -22,10 +21,13 @@ export default function SalaryCalculator() {
                     type="text"
                     placeholder={currentFamilyMember.name}
                     className=" w-2/3"
+                    id="name"
+                    value={currentFamilyMember.name}
+                    onInput={handleInputChange}
                 />
                 <div>Add meg a családtag nevét!</div>
                 <div>Bruttó bér</div>
-                <Input type="number" placeholder="250.000" className=" w-2/3" />
+                <Input type="number" placeholder="250.000" id="salary" value={currentFamilyMember.salary} className=" w-2/3" onInput={handleInputChange} />
                 <div>Add meg a bruttó béredet!</div>
                 <Slider
                     defaultValue={[100]}
@@ -46,26 +48,18 @@ export default function SalaryCalculator() {
                     <DiscountSwitch
                         id="under25"
                         text="25 év alattiak SZJA mentessége"
-                        checked={currentFamilyMember.under25}
-                        click={() => activate("under25")}
                     />
                     <DiscountSwitch
                         id="newlyWed"
                         text="Friss házasok kedvezménye"
-                        checked={currentFamilyMember.newlyWed}
-                        click={() => activate("newlyWed")}
                     />
                     <DiscountSwitch
                         id="taxRelief"
                         text="Személyi adókedvezmény"
-                        checked={currentFamilyMember.taxRelief}
-                        click={() => activate("taxRelief")}
                     />
                     <DiscountSwitch
                         id="familyDiscount"
                         text="Családi kedvezmény"
-                        checked={currentFamilyMember.familyDiscount}
-                        click={() => activate("familyDiscount")}
                     />
                     {currentFamilyMember.familyDiscount && (
                         <div>
