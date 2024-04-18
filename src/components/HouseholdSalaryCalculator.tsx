@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, createContext } from "react";
 import FamilyMemberTabs from "./FamilyMemberTabs/FamilyMemberTabs";
 import HouseholdSummary from "./HouseholdSummary/HouseholdSummary";
 import SalaryCalculator from "./SalaryCalculator/SalaryCalculator";
@@ -8,12 +8,14 @@ export interface familyMember {
     name: string;
     salary: number;
     under25: boolean;
-    newlywed: boolean;
+    newlyWed: boolean;
     weddingDate: Date | null;
     taxRelief: boolean;
     familyDiscount: boolean;
     dependents: number;
 }
+
+export const CurrentMemberContext = createContext<familyMember|null>(null);
 
 const HouseholdSalaryCalculator = () => {
     const defaultFamilyMember: familyMember = {
@@ -21,7 +23,7 @@ const HouseholdSalaryCalculator = () => {
         name: "Bendi",
         salary: 250000,
         under25: false,
-        newlywed: false,
+        newlyWed: false,
         weddingDate: null,
         taxRelief: false,
         familyDiscount: false,
@@ -33,6 +35,7 @@ const HouseholdSalaryCalculator = () => {
     const [familyMembers, setFamilyMembers] = useState<familyMember[]>([
         defaultFamilyMember,
     ]);
+    
     const newMember = () => {
         console.log("newmember");
         setFamilyMembers([
@@ -45,20 +48,19 @@ const HouseholdSalaryCalculator = () => {
       newCurrent && setCurrentFamilyMember(newCurrent);
     }
     return (
-        <>
+        <CurrentMemberContext.Provider value={currentFamilyMember} >
             <header>
                 <FamilyMemberTabs
-                    currentMember={currentFamilyMember.id}
                     family={familyMembers}
                     addFamilyMember={newMember}
                     setCurrentMember={setActiveMember}
                 />
             </header>
-            <main>
+            <main className="flex gap-1 mt-2">
                 <SalaryCalculator />
                 <HouseholdSummary />
             </main>
-        </>
+        </CurrentMemberContext.Provider>
     );
 };
 
