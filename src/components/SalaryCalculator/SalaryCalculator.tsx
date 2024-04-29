@@ -119,7 +119,7 @@ export default function SalaryCalculator( {deleteCurrentFamilyMember}:Props ) {
     const [sliderValue,setSliderValue] = useState(currentFamilyMember.sliderValue);
     const [defaultGrossSalary,setDefaultGrossSalary] = useState<number>(currentFamilyMember.grossSalary);
     useEffect(()=>{
-        setCurrentFamilyMember({...currentFamilyMember,grossSalary:defaultGrossSalary*(sliderValue[0]/100)})
+        setCurrentFamilyMember({...currentFamilyMember,grossSalary:defaultGrossSalary*(sliderValue[0]/100),sliderValue:sliderValue})
     },[sliderValue]);
     if (currentFamilyMember) {
         return (
