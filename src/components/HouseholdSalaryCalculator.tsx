@@ -16,6 +16,7 @@ export interface familyMember {
     familyDiscount: boolean;
     dependents: number;
     discountedDependents: 0 | 1 | 2 | 3;
+    sliderValue:number[],
 }
 export interface MyContextType {
     currentFamilyMember: familyMember;
@@ -39,6 +40,7 @@ const HouseholdSalaryCalculator = () => {
         familyDiscount: false,
         dependents: 0,
         discountedDependents: 0,
+        sliderValue:[100],
     };
     const [currentFamilyMember, setCurrentFamilyMember] =
         useState<familyMember>({

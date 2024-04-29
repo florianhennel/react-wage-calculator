@@ -56,6 +56,9 @@ export default function SalaryCalculator( {deleteCurrentFamilyMember}:Props ) {
             });
         }
     };
+    useEffect(()=>{
+        setSliderValue(currentFamilyMember.sliderValue);
+    },[currentFamilyMember.id]);
     const formatNumber = (value: string) => {
         return Number(value.replace(/[^\d]/g, ""));
     };
@@ -113,7 +116,7 @@ export default function SalaryCalculator( {deleteCurrentFamilyMember}:Props ) {
         currentFamilyMember.under25,
         currentFamilyMember.weddingDate,
     ]);
-    const [sliderValue,setSliderValue] = useState([100]);
+    const [sliderValue,setSliderValue] = useState(currentFamilyMember.sliderValue);
     const [defaultGrossSalary,setDefaultGrossSalary] = useState<number>(currentFamilyMember.grossSalary);
     useEffect(()=>{
         setCurrentFamilyMember({...currentFamilyMember,grossSalary:defaultGrossSalary*(sliderValue[0]/100)})
