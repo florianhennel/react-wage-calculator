@@ -9,6 +9,9 @@ import {
 } from "../HouseholdSalaryCalculator";
 import { useContext, useEffect, useState } from "react";
 import Dependents from "./components/Dependents";
+import NameInput from "./components/NameInput";
+import WageInput from "./components/WageInput";
+import SetWageButton from "./components/SetWageButton";
 
 export const calculateWeddingDateEligibility = (
     currentFamilyMember: familyMember
@@ -110,7 +113,6 @@ export default function SalaryCalculator( {deleteCurrentFamilyMember}:Props ) {
         currentFamilyMember.under25,
         currentFamilyMember.weddingDate,
     ]);
-    const [isFocused, setIsFocused] = useState<boolean>(false);
     const [sliderValue,setSliderValue] = useState([100]);
     const [defaultGrossSalary,setDefaultGrossSalary] = useState<number>(currentFamilyMember.grossSalary);
     useEffect(()=>{
@@ -123,38 +125,8 @@ export default function SalaryCalculator( {deleteCurrentFamilyMember}:Props ) {
                 <div className=" uppercase font-bold text-2xl -mt-6">
                     {currentFamilyMember.name} bérének kiszámítása
                 </div>
-                <div className="">Családtag neve</div>
-                <Input
-                    type="text"
-                    placeholder={currentFamilyMember.name}
-                    className=" w-2/3"
-                    id="name"
-                    value={currentFamilyMember.name}
-                    onInput={handleInputChange}
-                />
-                <div>Add meg a családtag nevét!</div>
-                <div>Bruttó bér</div>
-                <Input
-                    type="text"
-                    placeholder={Intl.NumberFormat("hu-HU", {
-                        style: "currency",
-                        currency: "HUF",
-                        maximumFractionDigits: 0,
-                    }).format(currentFamilyMember.grossSalary)}
-                    id="grossSalary"
-                    value={
-                        isFocused
-                            ? Intl.NumberFormat("hu-HU").format(
-                                  currentFamilyMember.grossSalary
-                              )
-                            : ""
-                    }
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    className=" w-2/3"
-                    onInput={handleInputChange}
-                />
-                <div>Add meg a bruttó béredet!</div>
+                <NameInput onChange={handleInputChange} />
+                <WageInput onChange={handleInputChange} />
                 <Slider
                     value={sliderValue}
                     max={200}
@@ -163,54 +135,10 @@ export default function SalaryCalculator( {deleteCurrentFamilyMember}:Props ) {
                     onValueChange={setSliderValue}
                 />
                 <div className="flex flex-row gap-4 justify-center w-2/3">
-                    <Button
-                        onClick={() =>
-                            setCurrentFamilyMember({
-                                ...currentFamilyMember,
-                                grossSalary:
-                                    currentFamilyMember.grossSalary * 0.95,
-                            })
-                        }
-                        className=" w-1/6"
-                    >
-                        -5%
-                    </Button>
-                    <Button
-                        onClick={() =>
-                            setCurrentFamilyMember({
-                                ...currentFamilyMember,
-                                grossSalary:
-                                    currentFamilyMember.grossSalary * 0.99,
-                            })
-                        }
-                        className=" w-1/6"
-                    >
-                        -1%
-                    </Button>
-                    <Button
-                        onClick={() =>
-                            setCurrentFamilyMember({
-                                ...currentFamilyMember,
-                                grossSalary:
-                                    currentFamilyMember.grossSalary * 1.01,
-                            })
-                        }
-                        className=" w-1/6"
-                    >
-                        +1%
-                    </Button>
-                    <Button
-                        onClick={() =>
-                            setCurrentFamilyMember({
-                                ...currentFamilyMember,
-                                grossSalary:
-                                    currentFamilyMember.grossSalary * 1.05,
-                            })
-                        }
-                        className=" w-1/6"
-                    >
-                        +5%
-                    </Button>
+                    <SetWageButton number={-5} />
+                    <SetWageButton number={-1} />
+                    <SetWageButton number={1} />
+                    <SetWageButton number={5} />
                 </div>
                 <div className=" uppercase font-bold text-base">
                     kedvezmények
