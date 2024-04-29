@@ -29,9 +29,10 @@ export default function PlusMinusButton({id,plusMinus}:Props){
     }
     useEffect(()=>{
         if (id==="dependents" && plusMinus === '-') {
-            setIsDisabled(currentFamilyMember.dependents === 0);
+            setIsDisabled(currentFamilyMember.dependents === (0 || currentFamilyMember.discountedDependents));
         }else if(id === "discountedDependents"){
-            setIsDisabled(currentFamilyMember.discountedDependents === ((plusMinus === '+')?3:0));
+            setIsDisabled(currentFamilyMember.discountedDependents === ((plusMinus === '+')?currentFamilyMember.dependents:0) || currentFamilyMember.discountedDependents === 3 && plusMinus === '+');
+            
         }
     },[currentFamilyMember.dependents,currentFamilyMember.discountedDependents])
     return (<Button onClick={handleClick} className=" w-2 h-2 rounded-full p-3" disabled={isDisabled}>{plusMinus}</Button>)
